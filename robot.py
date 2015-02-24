@@ -19,7 +19,7 @@ class Robot:
     def __init__(self, grid):
         self.grid = grid
         self.x, self.y = self.get_location()
-        self.dir = self.random_dir()
+        self.dir = random.randint(0, 4)
 
     def get_location(self):
         if random.random() >= self.detects_nothing:
@@ -47,9 +47,9 @@ class Robot:
         """
         :return: new random direction different from current
         """
-        rand_dir = random.randint(1, 4)
+        rand_dir = random.randint(0, 4)
         while rand_dir == self.dir:
-            rand_dir = random.randint(1, 4)
+            rand_dir = random.randint(0, 4)
         return dir
 
     def move(self):
@@ -79,4 +79,4 @@ class Robot:
 
 
 class Direction(object):
-    NORTH, EAST, SOUTH, WEST = range(1, 4)
+    NORTH, EAST, SOUTH, WEST = range(0, 4)

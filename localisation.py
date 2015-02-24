@@ -10,7 +10,7 @@ def start_robot(size):
     while True:
         print "Robot thinks it's in: ", robot.get_location()
         print "Robot is actually in: ", grid.robotLocation
-        if robot.get_location() == grid.robotLocation():
+        if robot.get_location() == grid.robotLocation:
             "Robot is correct!"
         robot.move()
 
