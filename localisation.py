@@ -1,6 +1,7 @@
+from time import sleep
+
 from grid import Grid
 from robot import Robot, Sensor
-from time import sleep
 
 
 def start_robot(size):
@@ -10,8 +11,6 @@ def start_robot(size):
     sensor = Sensor(grid)
     # create robot, which guesses location based on sensor
     robot = Robot(sensor)
-    # adds robot to grid to give access to robot's direction
-    grid.add_robot(robot)
     while True:
         # move robot
         grid.move_robot()

@@ -36,26 +36,6 @@ class Robot:
     def __init__(self, sensor):
         self.sensor = sensor
         self.x_guess, self.y_guess = 0, 0
-        self.dir = Direction.random()
-
-    def change_direction(self):
-        """
-        Change to different direction if facing wall, or randomly based on below probability settings.
-        :return: Robot direction
-        """
-        # Settings for robot direction.
-        # P( h_t+1 = h_t | not encountering a wall) = 0.7
-        # P( h_t+1 != h_t | not encountering a wall) = 0.3
-        # P( h_t+1 = h_t | encountering a wall) = 0.0
-        # P( h_t+1 != h_t | encountering a wall) = 1.0
-        rand = random.random()
-
-        if rand <= 0.3:
-            self.dir = Direction.random(self.dir)
-        while self.sensor.faces_wall():
-            self.dir = Direction.random(self.dir)
-
-        return self.dir
 
     def guess_move(self):
         print "Robot thinks it's in: ", self.sensor.sense_location()

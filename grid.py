@@ -1,5 +1,7 @@
 import random
 
+from robot import Direction
+
 
 class Grid:
     robot = None
@@ -8,9 +10,7 @@ class Grid:
         self.width = width
         self.height = height
         self.robot_location = random.randint(0, width - 1), random.randint(0, height - 1)
-
-    def add_robot(self, robot):
-        self.robot = robot
+        self.robot_dir = Direction.random()
 
     def robot_adj_location(self):
         x, y = self.robot_location
@@ -46,17 +46,22 @@ class Grid:
 
         # NORTH, EAST, SOUTH, WEST
         next_locations = [(x, y + 1), (x + 1, y), (x, y - 1), (x - 1, y)]
-        next_coord = next_locations[self.robot.dir]
+        next_coord = next_locations[self.robot_dir]
         if next_coord[0] >= self.width or next_coord[1] >= self.height or next_coord[0] < 0 or next_coord[1] < 0:
             return True
         else:
             return False
 
     def move_robot(self):
-        self.robot.change_direction()
+        rand = random.random()
+
+        if rand <= 0.3:
+            self.robot_dir = Direction.random(self.robot_dir)
+        while self.robot_faces_wall():
+            self.robot_dir = Direction.random(self.robot_dir)
 
         x, y = self.robot_location
 
         # NORTH, EAST, SOUTH, WEST
         next_locations = [(x, y + 1), (x + 1, y), (x, y - 1), (x - 1, y)]
-        self.robot_location = next_locations[self.robot.dir]
+        self.robot_location = next_locations[self.robot_dir]
