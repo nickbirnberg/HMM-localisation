@@ -1,18 +1,23 @@
 from grid import Grid
-from robot import Robot
+from robot import Robot, Sensor
+from time import sleep
 
 
 def start_robot(size):
     # create grid that contains world state
     grid = Grid(size.width, size.height)
-    # create robot, which queries the grid
-    robot = Robot(grid)
+    # create sensor, which queries the grid
+    sensor = Sensor(grid)
+    # create robot, which guesses location based on sensor
+    robot = Robot(sensor)
+    # adds robot to grid to give access to robot's direction
+    grid.add_robot(robot)
     while True:
-        print "Robot thinks it's in: ", robot.get_location()
-        print "Robot is actually in: ", grid.robotLocation
-        if robot.get_location() == grid.robotLocation:
-            "Robot is correct!"
-        robot.move()
+        # move robot
+        grid.move_robot()
+        print "Robot is in: ", grid.robot_location
+        robot.guess_move()
+        sleep(1)
 
 
 if __name__ == '__main__':
