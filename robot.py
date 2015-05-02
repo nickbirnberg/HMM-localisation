@@ -20,7 +20,7 @@ class Sensor:
             return self.grid.robot_location
         elif rand <= self.L + self.L_s * 8:
             return self.grid.robot_adj_location()
-        elif random <= self.L + self.L_s * 8 + self.L_s2 * 16:
+        elif rand <= self.L + self.L_s * 8 + self.L_s2 * 16:
             return self.grid.robot_adj2_location()
         else:
             return None
