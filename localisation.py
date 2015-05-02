@@ -5,6 +5,10 @@ from robot import Robot, Sensor
 
 
 def start_robot(size):
+    """
+    Sets up the world and robot and enters endless loop of guessing.
+    :param size:
+    """
     # create grid that contains world state
     grid = Grid(size.width, size.height)
     # create sensor, which queries the grid
