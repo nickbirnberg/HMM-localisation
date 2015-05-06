@@ -7,13 +7,19 @@ class HMM:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.transition_matrix = self.create_t_matrix()
+        self.t_matrix = self.create_t_matrix()
         self.none_matrix = self.none_matrix()
+        self.f_matrix = self.create_priors()
+
+    def create_priors(self):
+        length = self.width * self.height * 4
+        priors = [float(1) / length] * length
+        return np.array(priors)
 
     def create_t_matrix(self):
         width = self.width
         height = self.height
-        t = np.matrix(np.zeros(shape=(width * height * 4, width * height * 4)))
+        t = np.array(np.zeros(shape=(width * height * 4, width * height * 4)))
         # ________
         # |16|36|56| (2, 4)
         # |12|32|52|
@@ -89,7 +95,7 @@ class HMM:
             return self.none_matrix
         width = self.width
         height = self.height
-        o = np.matrix(np.zeros(shape=(width * height * 4, width * height * 4)))
+        o = np.array(np.zeros(shape=(width * height * 4, width * height * 4)))
         x, y = sensed_coord
 
         # Assign probability of 0.1 for sensed_coord
@@ -107,7 +113,7 @@ class HMM:
     def none_matrix(self):
         width = self.width
         height = self.height
-        o = np.matrix(np.zeros(shape=(width * height * 4, width * height * 4)))
+        o = np.array(np.zeros(shape=(width * height * 4, width * height * 4)))
         for i in range(width * height * 4):
             x = i / (height * 4)
             y = (i / 4) % height
@@ -141,3 +147,20 @@ class HMM:
                 possible_adj2.remove((poss_x, poss_y))
 
         return possible_adj2
+
+    def forward_step(self, coord):
+        f = self.f_matrix
+        o = self.create_sensor_matrix(coord)
+        t = self.t_matrix
+
+        f = t.dot(f).dot(o)
+        f /= np.sum(f)
+
+        self.f_matrix = f
+
+    def most_probable(self):
+        f = self.f_matrix
+        max_prob_idx = np.argmax(f)
+        x = max_prob_idx / (self.height * 4)
+        y = (max_prob_idx / 4) % self.height
+        return x, y

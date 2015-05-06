@@ -61,9 +61,8 @@ class TestHMM(unittest.TestCase):
 
     def test_create_t_matrix(self):
         model = HMM(2, 2)
-        model.create_t_matrix()
-        self.assertIsInstance(model.transition_matrix, np.matrix)
-        self.assertEqual(model.transition_matrix.size, 256)
+        self.assertIsInstance(model.t_matrix, np.ndarray)
+        self.assertEqual(model.t_matrix.size, 256)
 
     def test_create_sensor_matrix(self):
         model = HMM(8, 8)
@@ -84,6 +83,28 @@ class TestHMM(unittest.TestCase):
         self.assertEqual(none_matrix[144, 144], 0.1)
         self.assertEqual(none_matrix[132, 132], 0.225)
         self.assertAlmostEquals(none_matrix[128, 128], 0.425)
+
+    def test_priors(self):
+        model = HMM(8, 8)
+        self.assertEqual(model.f_matrix[5], float(1) / (8 * 8 * 4))
+
+    def test_forward(self):
+        model = HMM(8, 8)
+        model.forward_step((4, 4))
+        self.assertNotEqual(model.f_matrix[5], float(1) / (8 * 8 * 4))
+
+    def test_most_probable(self):
+        model = HMM(8, 8)
+        model.forward_step((4, 2))
+        self.assertEqual(model.most_probable(), (4, 2))
+        model.forward_step((4, 3))
+        self.assertEqual(model.most_probable(), (4, 3))
+        model.forward_step((4, 6))
+        self.assertEqual(model.most_probable(), (4, 4))
+        model.forward_step((5, 7))
+        self.assertEqual(model.most_probable(), (4, 5))
+        model.forward_step((5, 2))
+        self.assertEqual(model.most_probable(), (4, 4))
 
     if __name__ == '__main__':
         unittest.main()
