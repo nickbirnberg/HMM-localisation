@@ -96,17 +96,17 @@ class TestHMM(unittest.TestCase):
     def test_most_probable(self):
         model = HMM(8, 8)
         model.forward_step((4, 2), Direction.NORTH)
-        self.assertEqual(model.most_probable(), (4, 2))
+        self.assertEqual(model.most_probable()[0], (4, 2))
         model.forward_step((4, 3), Direction.NORTH)
-        self.assertEqual(model.most_probable(), (4, 3))
+        self.assertEqual(model.most_probable()[0], (4, 3))
         model.forward_step((4, 6), Direction.NORTH)
-        self.assertEqual(model.most_probable(), (4, 4))
+        self.assertEqual(model.most_probable()[0], (4, 4))
         model.forward_step((5, 7), Direction.NORTH)
-        self.assertEqual(model.most_probable(), (4, 5))
+        self.assertEqual(model.most_probable()[0], (4, 5))
         model.forward_step((5, 2), Direction.SOUTH)
-        self.assertEqual(model.most_probable(), (4, 4))
+        self.assertEqual(model.most_probable()[0], (4, 4))
         model.forward_step((5, 2), Direction.EAST)
-        self.assertEqual(model.most_probable(), (5, 4))
+        self.assertEqual(model.most_probable()[0], (5, 4))
 
     def test_generate_direction_matrices(self):
         model = HMM(8, 8)

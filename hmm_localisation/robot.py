@@ -25,12 +25,6 @@ class Sensor:
         else:
             return None
 
-    def faces_wall(self):
-        """
-        :return: Boolean whether or not robot faces a wall.
-        """
-        return self.grid.robot_faces_wall()
-
     def sense_direction(self):
         """
         :return: Direction from the Grid. Always accurate.
@@ -49,9 +43,9 @@ class Robot:
         print "Sensor senses: ", sensed_location
         sensed_direction = self.sensor.sense_direction()
         self.hmm.forward_step(sensed_location, sensed_direction)
-        guessed_move = self.hmm.most_probable()
+        guessed_move, probability = self.hmm.most_probable()
         print "Robot thinks it's in: ", guessed_move
-        return guessed_move
+        return guessed_move, probability
 
 
 class Direction:

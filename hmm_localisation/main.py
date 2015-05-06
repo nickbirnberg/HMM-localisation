@@ -1,7 +1,7 @@
 from time import sleep
 
 from grid import Grid
-from hmm_localisation.hmm import HMM
+from hmm import HMM
 from robot import Robot, Sensor
 
 
@@ -17,6 +17,7 @@ def start_robot(size):
     # create robot, which guesses location based on sensor
     hmm = HMM(size.width, size.height)
     robot = Robot(sensor, hmm)
+
     moves = 0
     guessed_right = 0
     while True:
@@ -24,21 +25,23 @@ def start_robot(size):
         grid.move_robot()
         moves += 1
         print "\nRobot is in: ", grid.robot_location
-        guessed_move = robot.guess_move()
+        guessed_move, probability = robot.guess_move()
         if guessed_move == grid.robot_location:
             guessed_right += 1
         man_distance = abs(guessed_move[0] - grid.robot_location[0]) + abs(guessed_move[1] - grid.robot_location[1])
         print "Manhattan distance: ", man_distance
         print "Robot has been correct:", float(guessed_right) / moves, "of the time."
+        if probability == 1.0:
+            print "Took robot", moves, " moves to be 100% accurate."
+            break
         sleep(1)
-
 
 if __name__ == '__main__':
     """
-    The main function called when localisation.py is run from the command line.
+    The main function called when main.py is run from the command line.
 
     Example usage:
-    > python localisation.py --width 10 --height 10
+    > python main.py --width 10 --height 10
     First argument defines the width of the grid, second, the height.
     """
     # handle arguments
@@ -48,7 +51,7 @@ if __name__ == '__main__':
     parser.add_argument("--width", type=int, required=True)
     parser.add_argument("--height", type=int, required=True)
     args = parser.parse_args()
-    if args.width <= 0 or args.height <= 0:
-        raise argparse.ArgumentTypeError("Values must be greater than zero.")
+    if args.width <= 1 or args.height <= 1:
+        raise argparse.ArgumentTypeError("Values must be greater than one.")
     #
     start_robot(args)

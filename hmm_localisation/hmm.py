@@ -1,6 +1,6 @@
 import numpy as np
 
-from hmm_localisation.robot import Direction
+from robot import Direction
 
 
 class HMM:
@@ -21,14 +21,7 @@ class HMM:
         width = self.width
         height = self.height
         t = np.array(np.zeros(shape=(width * height * 4, width * height * 4)))
-        # ________
-        # |16|36|56| (2, 4)
-        # |12|32|52|
-        # |8 |28|48| height = 5
-        # |4 |24|44| width = 3
-        # |0 |20|40|
-        # (0,0,NORTH), (0,0,EAST), (0,0,SOUTH), (0,0,WEST), (0,1,NORTH)...
-        #
+
         for i in xrange(width * height * 4):
             x = i / (height * 4)
             y = (i / 4) % height
@@ -42,7 +35,7 @@ class HMM:
         """
         Finds the neighbors of particular coord.
         :param state: tuple of (x, y, heading)
-        :return : list of empty squares that are adjacent to s
+        :return : list of empty squares that are adjacent to, with probability
         """
         x, y, direction = state
         # came from: NORTH, EAST, SOUTH, WEST
@@ -163,10 +156,9 @@ class HMM:
     def most_probable(self):
         f = self.f_matrix
         max_prob_idx = np.argmax(f)
-        print "With probability of: ", f[max_prob_idx]
         x = max_prob_idx / (self.height * 4)
         y = (max_prob_idx / 4) % self.height
-        return x, y
+        return (x, y), f[max_prob_idx]
 
     def generate_direction_matrices(self):
         length = self.width * self.height * 4
