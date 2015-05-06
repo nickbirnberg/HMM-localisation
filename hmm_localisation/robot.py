@@ -33,12 +33,15 @@ class Sensor:
 
 
 class Robot:
-    def __init__(self, sensor):
+    def __init__(self, sensor, hmm):
         self.sensor = sensor
         self.x_guess, self.y_guess = 0, 0
+        self.hmm = hmm
 
     def guess_move(self):
-        print "Robot thinks it's in: ", self.sensor.sense_location()
+        self.hmm.forward_step(self.sensor.sense_location())
+        guessed_move = self.hmm.most_probable()
+        print "Robot thinks it's in: ", guessed_move
 
 
 class Direction:

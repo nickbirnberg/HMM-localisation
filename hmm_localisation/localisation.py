@@ -1,6 +1,7 @@
 from time import sleep
 
 from grid import Grid
+from hmm_localisation.hmm import HMM
 from robot import Robot, Sensor
 
 
@@ -14,11 +15,12 @@ def start_robot(size):
     # create sensor, which queries the grid
     sensor = Sensor(grid)
     # create robot, which guesses location based on sensor
-    robot = Robot(sensor)
+    hmm = HMM(size.width, size.height)
+    robot = Robot(sensor, hmm)
     while True:
         # move robot
         grid.move_robot()
-        print "Robot is in: ", grid.robot_location
+        print "\nRobot is in: ", grid.robot_location
         robot.guess_move()
         sleep(1)
 
