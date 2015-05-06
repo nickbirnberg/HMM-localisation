@@ -31,6 +31,12 @@ class Sensor:
         """
         return self.grid.robot_faces_wall()
 
+    def sense_direction(self):
+        """
+        :return: Direction from the Grid. Always accurate.
+        """
+        return self.grid.robot_dir
+
 
 class Robot:
     def __init__(self, sensor, hmm):
@@ -39,9 +45,13 @@ class Robot:
         self.hmm = hmm
 
     def guess_move(self):
-        self.hmm.forward_step(self.sensor.sense_location())
+        sensed_location = self.sensor.sense_location()
+        print "Sensor senses: ", sensed_location
+        sensed_direction = self.sensor.sense_direction()
+        self.hmm.forward_step(sensed_location, sensed_direction)
         guessed_move = self.hmm.most_probable()
         print "Robot thinks it's in: ", guessed_move
+        return guessed_move
 
 
 class Direction:

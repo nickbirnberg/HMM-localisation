@@ -7,6 +7,7 @@ class HMM:
     def __init__(self, width, height):
         self.width = width
         self.height = height
+        self.direction_matrices = self.generate_direction_matrices()
         self.t_matrix = self.create_t_matrix()
         self.none_matrix = self.none_matrix()
         self.f_matrix = self.create_priors()
@@ -148,12 +149,13 @@ class HMM:
 
         return possible_adj2
 
-    def forward_step(self, coord):
+    def forward_step(self, coord, direction):
         f = self.f_matrix
         o = self.create_sensor_matrix(coord)
         t = self.t_matrix
+        d = self.direction_matrices[direction]
 
-        f = t.dot(f).dot(o)
+        f = t.dot(f).dot(o) * d
         f /= np.sum(f)
 
         self.f_matrix = f
@@ -161,6 +163,19 @@ class HMM:
     def most_probable(self):
         f = self.f_matrix
         max_prob_idx = np.argmax(f)
+        print "With probability of: ", f[max_prob_idx]
         x = max_prob_idx / (self.height * 4)
         y = (max_prob_idx / 4) % self.height
         return x, y
+
+    def generate_direction_matrices(self):
+        length = self.width * self.height * 4
+        north = [0] * length
+        east = [0] * length
+        south = [0] * length
+        west = [0] * length
+        d_matrix = [north, east, south, west]
+        for i in xrange(length):
+            direction = i % 4
+            d_matrix[direction][i] = 1
+        return d_matrix

@@ -17,11 +17,19 @@ def start_robot(size):
     # create robot, which guesses location based on sensor
     hmm = HMM(size.width, size.height)
     robot = Robot(sensor, hmm)
+    moves = 0
+    guessed_right = 0
     while True:
         # move robot
         grid.move_robot()
+        moves += 1
         print "\nRobot is in: ", grid.robot_location
-        robot.guess_move()
+        guessed_move = robot.guess_move()
+        if guessed_move == grid.robot_location:
+            guessed_right += 1
+        man_distance = abs(guessed_move[0] - grid.robot_location[0]) + abs(guessed_move[1] - grid.robot_location[1])
+        print "Manhattan distance: ", man_distance
+        print "Robot has been correct:", float(guessed_right) / moves, "of the time."
         sleep(1)
 
 

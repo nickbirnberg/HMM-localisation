@@ -90,21 +90,34 @@ class TestHMM(unittest.TestCase):
 
     def test_forward(self):
         model = HMM(8, 8)
-        model.forward_step((4, 4))
+        model.forward_step((4, 4), Direction.NORTH)
         self.assertNotEqual(model.f_matrix[5], float(1) / (8 * 8 * 4))
 
     def test_most_probable(self):
         model = HMM(8, 8)
-        model.forward_step((4, 2))
+        model.forward_step((4, 2), Direction.NORTH)
         self.assertEqual(model.most_probable(), (4, 2))
-        model.forward_step((4, 3))
+        model.forward_step((4, 3), Direction.NORTH)
         self.assertEqual(model.most_probable(), (4, 3))
-        model.forward_step((4, 6))
+        model.forward_step((4, 6), Direction.NORTH)
         self.assertEqual(model.most_probable(), (4, 4))
-        model.forward_step((5, 7))
+        model.forward_step((5, 7), Direction.NORTH)
         self.assertEqual(model.most_probable(), (4, 5))
-        model.forward_step((5, 2))
+        model.forward_step((5, 2), Direction.SOUTH)
         self.assertEqual(model.most_probable(), (4, 4))
+        model.forward_step((5, 2), Direction.EAST)
+        self.assertEqual(model.most_probable(), (5, 4))
+
+    def test_generate_direction_matrices(self):
+        model = HMM(8, 8)
+        self.assertEqual(model.direction_matrices[0][0], 1)
+        self.assertEqual(model.direction_matrices[0][1], 0)
+        self.assertEqual(model.direction_matrices[1][1], 1)
+        self.assertEqual(model.direction_matrices[1][0], 0)
+        self.assertEqual(model.direction_matrices[2][2], 1)
+        self.assertEqual(model.direction_matrices[2][1], 0)
+        self.assertEqual(model.direction_matrices[3][3], 1)
+        self.assertEqual(model.direction_matrices[3][1], 0)
 
     if __name__ == '__main__':
         unittest.main()
