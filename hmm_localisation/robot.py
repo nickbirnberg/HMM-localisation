@@ -59,7 +59,3 @@ class Direction:
             return dirs[random.randint(0, 2)]
         else:
             return dirs[random.randint(0, 3)]
-
-    @classmethod
-    def opposite(cls, direction):
-        return (direction + 2) % 4
