@@ -25,13 +25,6 @@ class Sensor:
         else:
             return None
 
-    def sense_direction(self):
-        """
-        :return: Direction from the Grid. Always accurate.
-        """
-        return self.grid.robot_dir
-
-
 class Robot:
     def __init__(self, sensor, hmm):
         self.sensor = sensor
@@ -41,10 +34,9 @@ class Robot:
     def guess_move(self):
         sensed_location = self.sensor.sense_location()
         print "Sensor senses: ", sensed_location
-        sensed_direction = self.sensor.sense_direction()
-        self.hmm.forward_step(sensed_location, sensed_direction)
+        self.hmm.forward_step(sensed_location)
         guessed_move, probability = self.hmm.most_probable()
-        print "Robot thinks it's in: ", guessed_move
+        print "Robot thinks it's in: ", guessed_move, " with probability: ", probability
         return guessed_move, probability
 
 

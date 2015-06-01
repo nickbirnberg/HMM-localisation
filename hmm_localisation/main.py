@@ -31,9 +31,6 @@ def start_robot(size):
         man_distance = abs(guessed_move[0] - grid.robot_location[0]) + abs(guessed_move[1] - grid.robot_location[1])
         print "Manhattan distance: ", man_distance
         print "Robot has been correct:", float(guessed_right) / moves, "of the time."
-        if probability == 1.0:
-            print "Took robot", moves, " moves to be 100% accurate."
-            break
         sleep(1)
 
 if __name__ == '__main__':
